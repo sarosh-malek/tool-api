@@ -2,25 +2,33 @@ const UserModel = require("../model/userModel");
 
 const responseHandler = (code, message, res) => {
   res.status(code).json({
-    data: message,
+    ...message,
   });
 };
 
 const userControllers = {
   async login(req, res) {
+    console.log(req.body);
     try {
       const user = await UserModel.findOne(
         {
-          $or: [{ userName: req.body.userName }, { email: req.body.userName }],
+          $or: [
+            { userName: req.body.userNameOrEmail },
+            { email: req.body.userNameOrEmail },
+          ],
           password: req.body.password,
         },
         {}
       );
       if (user) {
-        responseHandler(200, { email: user.email }, res);
+        responseHandler(
+          200,
+          { email: user.email, userName: user.userName },
+          res
+        );
       } else {
         responseHandler(
-          400,
+          200,
           { error: "user name or password is incorrect" },
           res
         );
@@ -37,7 +45,7 @@ const userControllers = {
     } catch (err) {
       if (err.code === 11000) {
         responseHandler(
-          400,
+          200,
           { error: "userName or email already exists" },
           res
         );

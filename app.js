@@ -4,6 +4,7 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+const cors = require("cors");
 const mongoose = require("mongoose");
 
 const userRouter = require("./routes/users");
@@ -13,11 +14,11 @@ const bootstrape = async () => {
   mongoose.connect(process.env.DB_URL, { dbName: "tool" });
 
   var app = express();
-
   app.use(logger("dev"));
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
+  app.use(cors());
   app.use("/page", pageRouter);
   app.use("/user", userRouter);
 
