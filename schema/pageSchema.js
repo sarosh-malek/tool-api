@@ -2,14 +2,17 @@ const mongoose = require("mongoose");
 
 const pageSchema = new mongoose.Schema(
   {
+    emoji: {
+      type: String,
+    },
     title: {
       type: String,
       unique: true,
-      required: [true, "Required field"],
+      required: [true, "title is required field"],
     },
     subPages: {
       type: Array,
-      required: [true, "Required field"],
+      required: [true, "subPages equired field"],
     },
   },
   {

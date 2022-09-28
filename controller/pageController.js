@@ -1,6 +1,7 @@
 const pageModel = require("../model/pageModel");
 
 const responseHandler = (code, message, res) => {
+  console.log({ ...message });
   res.status(code).json({
     ...message,
   });
@@ -22,14 +23,11 @@ const pageController = {
   async addPage(req, res) {
     try {
       const page = await pageModel.create(req.body);
-      responseHandler(200, { page }, res);
+      responseHandler(200, page, res);
     } catch (err) {
+      console.log(err);
       if (err.code === 11000) {
-        responseHandler(
-          400,
-          { error: "userName or email already exists" },
-          res
-        );
+        responseHandler(400, { error: "Page already exists" }, res);
       } else {
         responseHandler(400, { error: err._message }, res);
       }
